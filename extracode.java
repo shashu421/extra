@@ -112,4 +112,57 @@ public class HttpToAzureBlobUploader {
 
 
 
+------()()
+
+            
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+public class HttpURLConnectionToByteArray {
+
+    public static void main(String[] args) {
+        String httpUrl = "http://example.com/file.txt"; // Replace with your URL
+
+        try {
+            // Fetch content from HTTP URL
+            byte[] fileContent = fetchContentAsByteArray(httpUrl);
+
+            // For demonstration: print the content as a string
+            System.out.println(new String(fileContent));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static byte[] fetchContentAsByteArray(String httpUrl) throws IOException {
+        URL url = new URL(httpUrl);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        
+        try (InputStream inputStream = connection.getInputStream();
+             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+            
+            // Buffer to read data
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            
+            // Read the input stream into the byte array output stream
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                byteArrayOutputStream.write(buffer, 0, bytesRead);
+            }
+            
+            // Convert to byte array
+            return byteArrayOutputStream.toByteArray();
+        } finally {
+            connection.disconnect();
+        }
+    }
+}
+
+
+
+
+
             
