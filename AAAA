@@ -1,0 +1,29 @@
+from azure.storage.blob import BlobServiceClient, BlobClient
+
+# Replace these with your own values
+source_connection_string = "Source_Storage_Connection_String"
+destination_connection_string = "Destination_Storage_Connection_String"
+source_container_name = "source-container"
+destination_container_name = "destination-container"
+blob_name = "path/to/source/file.txt"  # Source blob name
+destination_blob_name = "path/to/destination/file.txt"  # Destination blob name
+
+def copy_blob():
+    # Create BlobServiceClient for the source and destination
+    source_blob_service_client = BlobServiceClient.from_connection_string(source_connection_string)
+    destination_blob_service_client = BlobServiceClient.from_connection_string(destination_connection_string)
+
+    # Get the source blob client
+    source_blob_client = source_blob_service_client.get_blob_client(container=source_container_name, blob=blob_name)
+
+    # Get the destination blob client
+    destination_blob_client = destination_blob_service_client.get_blob_client(container=destination_container_name, blob=destination_blob_name)
+
+    # Start the copy operation
+    copy_status = destination_blob_client.start_copy_from_url(source_blob_client.url)
+
+    print(f"Copying blob from {source_blob_client.url} to {destination_blob_client.url}")
+    print(f"Copy status: {copy_status['copy_status']}")
+
+if __name__ == "__main__":
+    copy_blob()
